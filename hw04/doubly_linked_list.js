@@ -12,7 +12,8 @@ class DoublyLinkedList {
         this.tail = null;
         this.len = 0;
     }
-    push_back(data) {
+
+    pushBack(data) {
         let node = new Node(data, null, null);
         if (this.head === null) {
             this.head = node;
@@ -24,6 +25,26 @@ class DoublyLinkedList {
         }
         this.len++;
     }
+
+    getNode(index) {
+        if (index < 0 || index >= this.len) {
+            throw new Error("Index is out of range: " + index);
+        }
+        let current;
+        if (index < this.len / 2) {
+            current = this.head;
+            for (let i = 0; i < index; i++) {
+                current = current.next;
+            }
+        } else {
+            current = this.tail;
+            for (let i = this.len; i > index; i--) {
+                current = current.prev;
+            }
+        }
+        return current;
+    }
+
     find(data) {
         let current = this.head;
         while (current != null) {
@@ -34,9 +55,10 @@ class DoublyLinkedList {
         }
         return null;
     }
+
     insert(data, index) {
         if (index < 0 || index > this.len) {
-            return;
+            throw new Error("Index is out of range: " + index);
         }
         let node = new Node(data, null, null);
         if (this.len === 0) {
@@ -47,16 +69,9 @@ class DoublyLinkedList {
             node.next = this.head;
             this.head = node;
         } else if (index === this.len) {
-            this.tail.next = node;
-            node.prev = this.tail;
-            this.tail = node;
+            this.pushBack(data);
         } else {
-            let curr_index = 0;
-            let current = this.head;
-            while (curr_index !== index) {
-                current = current.next;
-                curr_index++;
-            }
+            let current = this.getNode(index);
             node.prev = current.prev;
             node.next = current;
             current.prev.next = node;
@@ -64,26 +79,18 @@ class DoublyLinkedList {
         }
         this.len++;
     }
-    change(index, data) {
+
+    set(index, data) {
         if (index < 0 || index >= this.len) {
-            return;
-        } else if (index === 0) {
-            this.head.data = data;
-        } else if (index === this.len - 1) {
-            this.tail.data = data;
+            throw new Error("Index is out of range: " + index);
         } else {
-            let curr_index = 0;
-            let current = this.head;
-            while (curr_index !== index) {
-                current = current.next;
-                curr_index++;
-            }
-            current.data = data;
+            this.getNode(index).data = data;
         }
     }
+
     remove(index) {
         if (index < 0 || index >= this.len) {
-            return;
+            throw new Error("Index is out of range: " + index);
         } else if (index === 0) {
             this.head = this.head.next;
             this.head.prev = null;
@@ -91,52 +98,61 @@ class DoublyLinkedList {
             this.tail = this.tail.prev;
             this.tail.next = null;
         } else {
-            let curr_index = 0;
-            let current = this.head;
-            while (curr_index !== index) {
-                current = current.next;
-                curr_index++;
-            }
+            let current = this.getNode(index);
             current.prev.next = current.next;
             current.next.prev = current.prev;
         }
         this.len--;
     }
-    print(separator) {
+
+    toString(sep = ', ') {
+        let res = "[";
         let current = this.head;
-        process.stdout.write("[");
         while (current != null) {
             if (current !== this.tail) {
-                process.stdout.write(`${current.data}${separator}`);
+                res += `${current.data.toString()}${sep}`;
             } else {
-                process.stdout.write(`${current.data}`)
+                res += `${current.data.toString()}`;
             }
             current = current.next;
         }
-        process.stdout.write("]\n");
+        res += "]";
+        return res;
     }
 }
 
 // Testing
+// List of lists
 let list = new DoublyLinkedList();
-list.push_back(0);
-list.push_back(1);
-list.push_back(2);
-list.push_back(3);
-list.push_back(4);
+let to_push;
+for (let i = 0; i < 5; i++) {
+    to_push = new DoublyLinkedList();
+    to_push.pushBack(i);
+    to_push.pushBack(i + 1);
+    list.pushBack(to_push);
+}
+console.log(list.toString());
 
-list.print(', ');
+// With usual data all the methods
+list = new DoublyLinkedList();
+for (let i = 0; i < 5; i++) {
+    list.pushBack(i);
+}
 
+console.log(list.toString());
 console.log('Index of node with data = 2:', list.find(2).data);
 console.log('list len:', list.len);
 list.insert(-1, 0)
 list.insert(1.5, 2);
 console.log('After 2 inserts:')
 console.log('list len:', list.len);
-list.print(', ')
-list.change(2, 1.95);
+
+console.log(list.toString());
+
+list.set(2, 1.95);
 list.remove(1);
 list.remove(3);
-console.log('After change, and 2 remove:');
+console.log('After set, and 2 remove:');
 console.log('list len:', list.len);
-list.print(', ')
+
+console.log(list.toString())
