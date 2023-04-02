@@ -27,7 +27,7 @@ class List {
         return this.listSize;
     }
     toString() {
-        return this.dataStore;
+        return this.dataStore.toString();
     }
     insert(element, after) {
         let insertPos = this.find(after);
@@ -39,12 +39,12 @@ class List {
         return false;
     }
     clear() {
-        delete this.dataStore;
         this.dataStore = [];
+        this.listSize = 0;
     }
     contains(element) {
         for (let i = 0; i < this.dataStore.length; ++i) {
-            if (this.dataStore[i] == element) {
+            if (this.dataStore[i] === element) {
                 return true;
             }
         }
