@@ -35,17 +35,14 @@ var DoublyLinkedList = /** @class */ (function () {
         if (index < this.len / 2) {
             current = this.head;
             for (var i = 0; i < index; i++) {
-                current = current === null || current === void 0 ? void 0 : current.next;
+                current = current.next;
             }
         }
         else {
             current = this.tail;
             for (var i = this.len; i > index; i--) {
-                current = current === null || current === void 0 ? void 0 : current.prev;
+                current = current.prev;
             }
-        }
-        if (!current) {
-            throw new Error("Node is null");
         }
         return current;
     };
@@ -131,12 +128,8 @@ var DoublyLinkedList = /** @class */ (function () {
         var res = "[";
         var current = this.head;
         while (current != null) {
-            if (current !== this.tail) {
-                res += "".concat(current.data.toString()).concat(sep);
-            }
-            else {
-                res += "".concat(current.data.toString());
-            }
+            res += current.data.toString();
+            res += current !== this.tail ? sep : "";
             current = current.next;
         }
         res += "]";

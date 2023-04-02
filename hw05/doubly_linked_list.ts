@@ -37,20 +37,17 @@ class DoublyLinkedList<T extends { toString(): string }> {
         if (index < 0 || index >= this.len) {
             throw new Error("Index is out of range: " + index);
         }
-        let current: ListNode<T> | null | undefined;
+        let current: ListNode<T>;
         if (index < this.len / 2) {
-            current = this.head;
+            current = this.head!;
             for (let i = 0; i < index; i++) {
-                current = current?.next;
+                current = current.next!;
             }
         } else {
-            current = this.tail;
+            current = this.tail!;
             for (let i = this.len; i > index; i--) {
-                current = current?.prev;
+                current = current.prev!;
             }
-        }
-        if (!current) {
-            throw new Error("Node is null");
         }
         return current;
     }
@@ -133,11 +130,8 @@ class DoublyLinkedList<T extends { toString(): string }> {
         let res = "[";
         let current = this.head;
         while (current != null) {
-            if (current !== this.tail) {
-                res += `${current.data.toString()}${sep}`;
-            } else {
-                res += `${current.data.toString()}`;
-            }
+            res += current.data.toString();
+            res += current !== this.tail ? sep : "";
             current = current.next;
         }
         res += "]";

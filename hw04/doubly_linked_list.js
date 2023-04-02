@@ -109,11 +109,8 @@ class DoublyLinkedList {
         let res = "[";
         let current = this.head;
         while (current != null) {
-            if (current !== this.tail) {
-                res += `${current.data.toString()}${sep}`;
-            } else {
-                res += `${current.data.toString()}`;
-            }
+            res += current.data.toString();
+            res += current !== this.tail ? sep : "";
             current = current.next;
         }
         res += "]";
